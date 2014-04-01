@@ -3,15 +3,19 @@
     "version": "0.0.1",
     "author": "TinyBox",
     "description": "ufo.js netowrk layer",
+    "main": "./lib/networklayer.bundle.min.js",
     "scripts": {
-        "test": "make test"
+        "test": "make"
     },
     
     "license": "MIT",
     "devDependencies": {
         "mocha": "^1.18.2",
         "coffee-script": "^1.7.1",
-        "chai": "^1.9.1"
+        "chai": "^1.9.1",
+        "coffeeify": "^0.6.0",
+        "browserify": "^3.38.0",
+        "uglify-js": "^2.4.13"
     }
 
 }
