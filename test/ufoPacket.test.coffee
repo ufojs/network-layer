@@ -8,7 +8,7 @@ describe 'A generic ufo packet', ->
     testPacket = new ufoPacket
     testPacket.should.not.equal null
 
-  it 'should be correctly created', ->
+  it 'should be correctly created with arguments', ->
     testPacket = new ufoPacket 'testType', 'testOrigin', 'testBody', false, 'testTtl'
     testPacket.type.should.equal 'testType'
     testPacket.originator.should.equal 'testOrigin'
@@ -16,6 +16,8 @@ describe 'A generic ufo packet', ->
     testPacket.path.length.should.equal 0
     testPacket.isBoozer.should.equal false
     testPacket.ttl.should.equal 'testTtl'
+
+#  it 'should be correctly created without arguments', ->
 
   it 'should add an id to the path', ->
     testPacket = new ufoPacket 'testType', 'testBody', false
