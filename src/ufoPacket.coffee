@@ -1,6 +1,6 @@
-class p2pPacket
+class ufoPacket
 
-  constructor: (@type, @body, @isBoozer, @ttl) ->
+  constructor: (@type, @originator, @body, @isBoozer, @ttl) ->
     @path = []
 
   addIDToPath: (idToAdd) ->
@@ -25,11 +25,12 @@ class p2pPacket
 
   fromString: (packet) ->
     packet = JSON.parse(packet)
-    @type = packet.type
-    @body = packet.body
-    @isBoozer = packet.isBoozer
-    @ttl = packet.ttl
-    @path = packet.path
+    @type = packet.type ? ''
+    @originator = packet.originator ? ''
+    @body = packet.body ? ''
+    @isBoozer = packet.isBoozer ? false
+    @ttl = packet.ttl ? 0
+    @path = packet.path ? []
     return this
 
-exports.p2pPacket = p2pPacket
+exports.ufoPacket = ufoPacket

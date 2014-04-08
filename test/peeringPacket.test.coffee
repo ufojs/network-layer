@@ -11,4 +11,3 @@ describe 'A generic peering packet', ->
   it 'should be correctly created', ->
     testPacket = new peeringPacket 'testOriginator'
     testPacket.originator.should.equal 'testOriginator'
-    testPacket.candidates.should.not.equal null
