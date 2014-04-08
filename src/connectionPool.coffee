@@ -19,4 +19,6 @@ class connectionPool
       delete this.connectionName
       @usedConnections--
 
+  exists: (connectionName) ->
+
 exports.connectionPool = connectionPool

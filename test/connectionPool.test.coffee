@@ -34,3 +34,5 @@ describe 'A generic connection pool', ->
     testCP.deleteConnectionByName('testName')
     expect(testCP.getConnectionByName('testName')).to.be.undefined
     testCP.usedConnections.should.equal 0
+
+  it 'should tell if a connection exists', ->
