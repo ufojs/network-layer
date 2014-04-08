@@ -8,8 +8,8 @@ test:
 
 compile:
 	mkdir -p lib
-	PATH="$(PATH):./node_modules/.bin/" browserify -t coffeeify --extension=".coffee" src/p2pPacket.coffee -s ufo > lib/p2pPacket.bundle.js
-	PATH="$(PATH):./node_modules/.bin/" uglifyjs lib/p2pPacket.bundle.js -o lib/p2pPacket.bundle.min.js
+	PATH="$(PATH):./node_modules/.bin/" browserify -t coffeeify --extension=".coffee" src/ufoPacket.coffee -s ufo > lib/ufoPacket.bundle.js
+	PATH="$(PATH):./node_modules/.bin/" uglifyjs lib/ufoPacket.bundle.js -o lib/ufoPacket.bundle.min.js
 
 develop: npmInstall
 	fswatch "./src/:./test/" "make test"
