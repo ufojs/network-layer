@@ -36,3 +36,7 @@ describe 'A generic connection pool', ->
     testCP.usedConnections.should.equal 0
 
   it 'should tell if a connection exists', ->
+    testCP = new connectionPool(1)
+    testCP.pushConnection 'testConnection', 'testName'
+    testCP.contains('testName').should.be.true
+    testCP.contains('notExisting').should.be.false
