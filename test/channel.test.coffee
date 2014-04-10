@@ -38,3 +38,6 @@ describe 'A generic channel', ->
     testChannel = new newChannel.channel
     testChannel.connectViaSocket 'wsAddress', 'connectionCallback'
     testChannel.onConnect.should.be.equal 'connectionCallback'
+
+  it 'should connect to a datachannel', ->
+    testChannel.connectViaDatachannel 'testDatachannel', 'testID'

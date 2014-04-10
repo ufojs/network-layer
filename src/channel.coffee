@@ -5,8 +5,13 @@ class channel
   constructor: () ->
     @wrappedChannel = null
 
-  connectViaSocket: (address, onConnectCallback) ->
-    @wrappedChannel = new WebSocket(address)
+  connectViaSocket: (wssAddress, onConnectCallback) ->
+    @wrappedChannel = new WebSocket(wssAddress)
     @onConnect = onConnectCallback
+
+  connectViaDatachannel: (datachannel, id) ->
+
+  setSocket: (socket) ->
+
 
 exports.channel = channel
