@@ -28,7 +28,7 @@ describe 'A generic channel', ->
     newChannel = rewire '../src/channel'
     newChannel.__set__ 'WebSocket', WebSocket
     testChannel = new newChannel.channel
-    testChannel.connectViaSocket('websocketAddress')
+    testChannel.connectViaSocket 'websocketAddress'
 
   it 'should properly set a callback when connected to a websocket', ->
     class WebSocket

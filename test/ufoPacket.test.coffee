@@ -22,16 +22,16 @@ describe 'A generic ufo packet', ->
   it 'should add an id to the path', ->
     testPacket = new ufoPacket 'testType', 'testBody', false
     testPacket.path = []
-    testPacket.addIDToPath('cacca')
-    testPacket.addIDToPath('altracacca')
+    testPacket.addIDToPath 'cacca'
+    testPacket.addIDToPath 'altracacca'
     testPacket.path[0].should.equal 'cacca'
     testPacket.path.indexOf('altracacca').should.equal 1
 
   it 'should pop an id from the path', ->
     testPacket = new ufoPacket
     testPacket.path = []
-    testPacket.addIDToPath('cacca')
-    testPacket.addIDToPath('altracacca')
+    testPacket.addIDToPath 'cacca'
+    testPacket.addIDToPath 'altracacca'
     testPacket.removeIDFromPath()
     testPacket.path.length.should.equal 1
     testPacket.removeIDFromPath()
@@ -46,7 +46,7 @@ describe 'A generic ufo packet', ->
   it 'should generate itself from another string packet', ->
     generator = '{"type":"typ","originator":"org","body":"bdy","isBoozer":true,"ttl":3,"path":["id"]}'
     testPacket = new ufoPacket
-    testPacket = testPacket.fromString(generator)
+    testPacket = testPacket.fromString generator
     testPacket.type.should.equal 'typ'
     testPacket.originator.should.equal 'org'
     testPacket.body.should.equal 'bdy'
@@ -57,7 +57,7 @@ describe 'A generic ufo packet', ->
   it 'should apply default values when string packet is wrong', ->
     badGenerator = '{"yolo":"cacca"}'
     testPacket = new ufoPacket
-    testPacket = testPacket.fromString(badGenerator)
+    testPacket = testPacket.fromString badGenerator
     testPacket.type.should.equal ''
     testPacket.originator.should.equal ''
     testPacket.body.should.equal ''
