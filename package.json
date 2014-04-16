@@ -5,7 +5,7 @@
   "description": "ufo.js netowrk layer",
   "main": "./lib/networklayer.bundle.min.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "./node_modules/.bin/grunt test"
   },
   "license": "MIT",
   "devDependencies": {
