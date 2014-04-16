@@ -31,7 +31,7 @@ class channel
 
     @wrappedChannel.onClose = 'yolo'
     @wrappedChannel.onError = 'yolo'
-    @wrappedChannel.send = 'yolo'
+    @wrappedChannel.send = 'yoloyolo'
 
 
 exports.channel = channel

@@ -5,7 +5,7 @@
   "description": "ufo.js netowrk layer",
   "main": "./lib/networklayer.bundle.min.js",
   "scripts": {
-    "test": "make"
+    "test": "grunt test"
   },
   "license": "MIT",
   "devDependencies": {
@@ -14,10 +14,17 @@
     "chai": "^1.9.1",
     "coffeeify": "^0.6.0",
     "browserify": "^3.38.0",
-      "uglify-js": "^2.4.13",
+    "uglify-js": "^2.4.13",
     "rewire": "^2.0.0",
     "sinon": "^1.9.1",
     "sinon-chai": "^2.5.0",
-    "bower": "^1.3.2"
+    "bower": "^1.3.2",
+    "grunt": "^0.4.4",
+    "grunt-browserify2": "^0.1.8",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-mocha-test": "^0.10.2",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
