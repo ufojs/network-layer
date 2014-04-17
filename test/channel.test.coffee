@@ -3,14 +3,14 @@ sinon = require 'sinon'
 chai = require 'chai'
 chai.should
 
-{channel} = require '../src/channel'
+{Channel} = require '../src/channel'
 
 describe 'A generic channel', ->
 
   testChannel = null
 
   beforeEach ->
-    testChannel = new channel
+    testChannel = new Channel
 
   it 'should be properly created', ->
     testChannel.should.exist
@@ -29,7 +29,7 @@ describe 'A generic channel', ->
 
     newChannel = rewire '../src/channel'
     newChannel.__set__ 'WebSocket', WebSocket
-    testChannel = new newChannel.channel
+    testChannel = new newChannel.Channel
     testChannel.connectViaSocket 'websocketAddress'
 
   it 'should properly set a callback when connected to a websocket', ->
@@ -37,7 +37,7 @@ describe 'A generic channel', ->
 
     newChannel = rewire '../src/channel'
     newChannel.__set__ 'WebSocket', WebSocket
-    testChannel = new newChannel.channel
+    testChannel = new newChannel.Channel
     testChannel.connectViaSocket 'wsAddress', 'connectionCallback'
     testChannel.onConnect.should.be.equal 'connectionCallback'
 
@@ -46,7 +46,7 @@ describe 'A generic channel', ->
 
     newChannel = rewire '../src/channel'
     newChannel.__set__ 'WebSocket', WebSocket
-    testChannel = new newChannel.channel
+    testChannel = new newChannel.Channel
     setupSpy = sinon.spy testChannel, 'setCommChannel'
     testChannel.connectViaSocket 'wsAddress', 'connectionCallback'
     setupSpy.should.be.calledOnce

@@ -8,16 +8,19 @@ module.exports = (grunt) ->
 
     uglify:
       build:
-        src: 'lib/ufoPacket.bundle.js'
-        dest: 'lib/ufoPacket.bundle.min.js'
+        src: 'lib/peer.bundle.js'
+        dest: 'lib/peer.bundle.min.js'
 
-    browserify2:
-      development:
-        entry: './src/ufoPacket.coffee'
-        compile: './lib/ufoPacket.bundle.js'
-        debug: yes
-        beforeHook: (bundle)->
-           bundle.transform coffeeify
+    browserify:
+      dist:
+        src: 'src/peer.coffee'
+        dest: 'lib/peer.bundle.js'
+      options:
+        transform: ['coffeeify']
+        browserifyOptions:
+          extensions: ['.coffee']
+        bundleOptions:
+          standalone: 'ufo'
 
     coffee:
       config:
@@ -39,15 +42,15 @@ module.exports = (grunt) ->
 
     watch:
       test:
-        files: ['test/*.coffee']
+        files: ['test/*.coffee', 'src/*.coffee']
         tasks: 'mochaTest'
       compile:
         files: ['src/*.coffee']
-        tasks: 'browserify2'
+        tasks: 'browserify'
 
     clean: ['lib/', 'node_modules/']
 
-  @loadNpmTasks 'grunt-browserify2'
+  @loadNpmTasks 'grunt-browserify'
   @loadNpmTasks 'grunt-contrib-uglify'
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-clean'
@@ -55,7 +58,7 @@ module.exports = (grunt) ->
   @loadNpmTasks 'grunt-mocha-test'
 
   @registerTask 'compile', [
-    'browserify2'
+    'browserify'
     'uglify'
   ]
 

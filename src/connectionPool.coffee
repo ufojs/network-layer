@@ -1,4 +1,4 @@
-class connectionPool
+class ConnectionPool
 
   constructor: (@size = 4) ->
     @usedConnections = 0
@@ -22,4 +22,4 @@ class connectionPool
     names = Object.keys this
     return if connectionName in names then true else false
 
-exports.connectionPool = connectionPool
+exports.ConnectionPool = ConnectionPool

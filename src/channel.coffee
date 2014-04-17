@@ -1,6 +1,6 @@
 WebSocket = Websocket ? null
 
-class channel
+class Channel
 
   constructor: () ->
     @wrappedChannel = null
@@ -18,8 +18,9 @@ class channel
     @setCommChannel this, id
 
   setCommChannel: (commChannel, commID) ->
+
     @wrappedChannel.onMessage = (message) ->
-      console.log 'Message received'
+      console.log 'Message received: ' + message
       message = message.data if message.data?
 
       message = new p2pPacket.fromString message
@@ -29,9 +30,15 @@ class channel
       else
         # client.carryHome message
 
+    @wrappedChannel.send = (packet) ->
+      console.log 'Sending packet: ' + packet
+      # packet.addIDToPath client.id if packet.isBoozer
+      @wrappedChannel.send packet.toString()
+
+
     @wrappedChannel.onClose = 'yolo'
     @wrappedChannel.onError = 'yolo'
-    @wrappedChannel.send = 'yoloyolo'
 
 
-exports.channel = channel
+
+exports.Channel = Channel

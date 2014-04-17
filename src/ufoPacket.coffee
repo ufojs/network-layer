@@ -1,4 +1,4 @@
-class ufoPacket
+class UfoPacket
 
   constructor: (@type, @originator, @body, @isBoozer, @ttl) ->
     @path = []
@@ -33,4 +33,4 @@ class ufoPacket
     @path = packet.path ? []
     return this
 
-exports.ufoPacket = ufoPacket
+exports.UfoPacket = UfoPacket
