@@ -5,7 +5,12 @@
   "description": "ufo.js netowrk layer",
   "main": "./lib/networklayer.bundle.min.js",
   "scripts": {
-    "test": "./node_modules/.bin/grunt test"
+      "test": "./node_modules/.bin/grunt test",
+      "postinstall": "./node_modules/.bin/grunt"
+  },
+  "reopsitory" : {
+    "type" : "git",
+    "url" : "https://github.com/ufojs/network-layer"
   },
   "license": "MIT",
   "devDependencies": {
