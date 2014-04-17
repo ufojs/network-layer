@@ -23,7 +23,7 @@ class Channel
       console.log 'Message received: ' + message
       message = message.data if message.data?
 
-      message = new p2pPacket.fromString message
+      message = new UfoPacket.fromString message
 
       if message.isBoozer = true or message.path.length = 0
         channel[message.type].call channel, message

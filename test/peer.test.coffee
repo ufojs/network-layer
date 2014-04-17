@@ -1,7 +1,4 @@
-rewire = require 'rewire'
-sinon = require 'sinon'
 chai = require 'chai'
-should = chai.should()
 expect = chai.expect
 
 {Peer} = require '../src/peer'

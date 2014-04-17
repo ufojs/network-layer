@@ -1,6 +1,3 @@
-chai = require 'chai'
-chai.should()
-
 {UfoPacket} = require '../src/ufoPacket'
 
 describe 'A generic ufo packet', ->

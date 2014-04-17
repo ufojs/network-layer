@@ -1,5 +1,5 @@
 chai = require 'chai'
-should = chai.should()
+expect = chai.expect
 
 {ConnectionPool} = require '../src/connectionPool'
 
@@ -31,7 +31,7 @@ describe 'A generic connection pool', ->
     testCP = new ConnectionPool 1
     testCP.pushConnection 'testConnection', 'testName'
     testCP.deleteConnectionByName 'testName'
-    should.not.exist testCP.getConnectionByName 'testName'
+    expect(testCP.getConnectionByName 'testName').to.be.undefined
     testCP.usedConnections.should.equal 0
 
   it 'should tell if a connection exists', ->

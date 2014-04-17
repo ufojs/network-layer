@@ -1,7 +1,5 @@
 rewire = require 'rewire'
 sinon = require 'sinon'
-chai = require 'chai'
-chai.should
 
 {Channel} = require '../src/channel'
 

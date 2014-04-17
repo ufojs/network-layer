@@ -8,13 +8,13 @@ module.exports = (grunt) ->
 
     uglify:
       build:
-        src: 'lib/peer.bundle.js'
-        dest: 'lib/peer.bundle.min.js'
+        src: 'lib/client.bundle.js'
+        dest: 'lib/client.bundle.min.js'
 
     browserify:
       dist:
-        src: 'src/peer.coffee'
-        dest: 'lib/peer.bundle.js'
+        src: 'src/client.coffee'
+        dest: 'lib/client.bundle.js'
       options:
         transform: ['coffeeify']
         browserifyOptions:
