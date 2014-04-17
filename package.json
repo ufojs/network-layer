@@ -5,8 +5,7 @@
   "description": "ufo.js netowrk layer",
   "main": "./lib/networklayer.bundle.min.js",
   "scripts": {
-      "test": "./node_modules/.bin/grunt test",
-      "postinstall": "./node_modules/.bin/grunt"
+    "test": "./node_modules/.bin/grunt test"
   },
   "reopsitory" : {
     "type" : "git",
