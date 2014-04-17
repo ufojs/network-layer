@@ -8,7 +8,6 @@ class Client
     @pool = new ConnectionPool
     @id = null
 
-
   disconnect: () ->
     console.log 'disconnect function'
 
@@ -18,7 +17,14 @@ class Client
   bootstrap: () ->
     console.log 'bootstrap function'
 
+  onPeeringRequest: (recPacket, callingPeer) ->
+    console.log 'onPeeringRequest function'
 
+  onBootstrapPerformed: () ->
+    console.log 'onBootstrapPerformed function'
+
+  carryHome: (message) ->
+    console.log 'carryHome function'
 
 
 exports.Client = Client
