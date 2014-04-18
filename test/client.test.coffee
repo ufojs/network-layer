@@ -1,5 +1,4 @@
 chai = require 'chai'
-should = chai.should()
 expect = chai.expect
 
 {Client} = require '../src/client'

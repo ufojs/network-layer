@@ -1,3 +1,5 @@
+chai = require 'chai'
+
 {UfoPacket} = require '../src/ufoPacket'
 
 describe 'A generic ufo packet', ->
