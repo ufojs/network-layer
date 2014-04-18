@@ -1,33 +1,12 @@
 chai = require 'chai'
 rewire = require 'rewire'
 chai.should()
+mocks = require './ufo.mocks'
+MockPeer = mocks.MockPeer
+MockWebSocket = mocks.MockWebSocket
+MockList = mocks.MockList
 
 ClientModule = null
-
-class MockList
-  constructor: () ->
-
-  add: (id, node) ->
-
-class MockWebSocket
-  constructor: () ->
-    self = this
-    callCallback = () ->
-      self.onopen()
-    setTimeout callCallback, 50
-
-  onopen: () ->
-
-  onmessage: (event) ->
-
-  send: (packet) ->
-
-  close: () ->
-
-class MockPeer
-  generatePeeringPacket: () ->
-
-  setPeeringReply: () ->
 
 describe 'A generic client', ->
 
