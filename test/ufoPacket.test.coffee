@@ -14,8 +14,6 @@ describe 'A generic ufo packet', ->
     testPacket.isBoozer.should.equal false
     testPacket.ttl.should.equal 'testTtl'
 
-#  it 'should be correctly created without arguments', ->
-
   it 'should add an id to the path', ->
     testPacket = new UfoPacket 'testType', 'testBody', false
     testPacket.path = []

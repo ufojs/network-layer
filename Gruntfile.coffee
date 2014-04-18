@@ -1,5 +1,3 @@
-coffeeify = require 'coffeeify'
-
 module.exports = (grunt) ->
 
   @initConfig
