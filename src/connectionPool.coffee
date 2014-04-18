@@ -20,6 +20,6 @@ class ConnectionPool
 
   contains: (connectionName) ->
     names = Object.keys this
-    return if connectionName in names then true else false
+    return connectionName in names
 
 exports.ConnectionPool = ConnectionPool
