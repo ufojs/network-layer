@@ -1,4 +1,5 @@
 chai = require 'chai'
+should = chai.should()
 
 {UfoPacket} = require '../src/ufoPacket'
 
