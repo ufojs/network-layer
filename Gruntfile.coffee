@@ -62,7 +62,6 @@ module.exports = (grunt) ->
 
   @registerTask 'test', 'mochaTest'
 
-  @registerTask 'default', [
-    'compile'
-    'mochaTest'
-  ]
+  @registerTask 'default', 'compile'
+
+  @registerTask 'develop', 'watch:test'
