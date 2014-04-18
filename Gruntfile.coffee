@@ -38,6 +38,10 @@ module.exports = (grunt) ->
           require: 'coffee-script/register'
         src: ['test/*.coffee']
 
+    karma:
+      integration:
+        configFile: 'integration-test/karma.conf.js'
+
     watch:
       test:
         files: ['test/*.coffee', 'src/*.coffee']
@@ -54,13 +58,19 @@ module.exports = (grunt) ->
   @loadNpmTasks 'grunt-contrib-clean'
   @loadNpmTasks 'grunt-contrib-watch'
   @loadNpmTasks 'grunt-mocha-test'
+  @loadNpmTasks 'grunt-karma'
 
   @registerTask 'compile', [
     'browserify'
     'uglify'
   ]
 
-  @registerTask 'test', 'mochaTest'
+  @registerTask 'integration-test', [
+    'compile'
+    'karma'
+  ]
+
+  @registerTask 'unit-test', 'mochaTest'
 
   @registerTask 'default', 'compile'
 
