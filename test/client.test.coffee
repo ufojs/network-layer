@@ -194,8 +194,6 @@ describe 'A generic client', ->
       constructor: () ->
         done()
 
-    #StubClient = rewire '../src/client'
-    #StubClient.__set__ 'Peer', Peer
     ClientModule.__set__ 'Peer', Peer
 
     testClient = new ClientModule.Client
