@@ -37,11 +37,10 @@ describe 'A generic client', ->
         address.should.be.equal 'ws://testaddress:5000'
         done()
 
-    StubClient = rewire '../src/client'
-    StubClient.__set__ 'WebSocket', WebSocket
-    StubClient.__set__ 'Peer', MockPeer
+    ClientModule.__set__ 'WebSocket', WebSocket
+    ClientModule.__set__ 'Peer', MockPeer
 
-    testClient = new StubClient.Client
+    testClient = new ClientModule.Client
     testClient.bootstrap 'testaddress', 5000
 
   it 'should set a ws onmessage callback', (done) ->
@@ -57,11 +56,10 @@ describe 'A generic client', ->
 
         setTimeout callOnopen, 100
 
-    StubClient = rewire '../src/client'
-    StubClient.__set__ 'WebSocket', WebSocket
-    StubClient.__set__ 'Peer', MockPeer
+    ClientModule.__set__ 'WebSocket', WebSocket
+    ClientModule.__set__ 'Peer', MockPeer
 
-    testClient = new StubClient.Client
+    testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
 
@@ -75,11 +73,10 @@ describe 'A generic client', ->
 
         setTimeout checkCallback, 500
 
-    StubClient = rewire '../src/client'
-    StubClient.__set__ 'WebSocket', WebSocket
-    StubClient.__set__ 'Peer', MockPeer
+    ClientModule.__set__ 'WebSocket', WebSocket
+    ClientModule.__set__ 'Peer', MockPeer
 
-    testClient = new StubClient.Client
+    testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
   it 'should create a new peer during bootstrap', (done) ->
@@ -88,11 +85,10 @@ describe 'A generic client', ->
         done()
       generatePeeringPacket: () ->
 
-    StubClient = rewire '../src/client'
-    StubClient.__set__ 'Peer', Peer
-    StubClient.__set__ 'WebSocket', MockWebSocket
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'WebSocket', MockWebSocket
 
-    testClient = new StubClient.Client
+    testClient = new ClientModule.Client
     testClient.bootstrap 'testaddress', 5000
 
   it 'should set a peer onopen callback', (done) ->
@@ -107,64 +103,70 @@ describe 'A generic client', ->
 
       generatePeeringPacket: () ->
 
-    StubClient = rewire '../src/client'
-    StubClient.__set__ 'WebSocket', MockWebSocket
-    StubClient.__set__ 'Peer', Peer
+    ClientModule.__set__ 'WebSocket', MockWebSocket
+    ClientModule.__set__ 'Peer', Peer
 
-    testClient = new StubClient.Client
+    testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
   it 'should get a peering packet from peer', (done) ->
-    MockPeer::generatePeeringPacket = (callback) ->
-      MockPeer::generatePeeringPacket = () ->
-      callback.should.be.a 'function'
-      done()
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        callback.should.be.a 'function'
+        done()
+
+    ClientModule.__set__ 'Peer', Peer
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
   it 'should send a peering packet via websocket', (done) ->
-    MockPeer::generatePeeringPacket = (callback) ->
-      MockPeer::generatePeeringPacket = () ->
-      callback 'testPacket'
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        callback 'testPacket'
 
-    MockWebSocket::send = (packet) ->
-      MockWebSocket::send = () ->
-      packet.should.be.equal 'testPacket'
-      done()
+    class WebSocket extends MockWebSocket
+      send: (packet) ->
+        packet.should.be.equal 'testPacket'
+        done()
+
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'WebSocket', WebSocket
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
   it 'should forward the peering reply to the peer', (done) ->
-    MockPeer::setPeeringReply = (packet) ->
-      MockPeer::setPeeringReply = () ->
-      packet.should.be.equal 'testReplyPacket'
-      done()
+    class Peer extends MockPeer
+      setPeeringReply: (packet) ->
+        packet.should.be.equal 'testReplyPacket'
+        done()
+      generatePeeringPacket: (callback) ->
+        callback()
 
-    MockPeer::generatePeeringPacket = (callback) ->
-      MockPeer::generatePeeringPacket = () ->
-      callback()
+    class WebSocket extends MockWebSocket
+      send: (packet) ->
+        this.onmessage { data : 'testReplyPacket' }
 
-    MockWebSocket::send = (packet) ->
-      MockWebSocket::send = () ->
-      this.onmessage { data : 'testReplyPacket' }
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'WebSocket', WebSocket
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
   it 'should close the websocket after the handshake', (done) ->
-    MockPeer::generatePeeringPacket = (callback) ->
-      MockPeer::generatePeeringPacket = () ->
-      callback()
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        callback()
 
-    MockWebSocket::send = (packet) ->
-      MockWebSocket::send = () ->
-      this.onmessage { data : 'testReplyPacket' }
+    class WebSocket extends MockWebSocket
+      send: (packet) ->
+        this.onmessage { data : 'testReplyPacket' }
+      close: () ->
+        done()
 
-    MockWebSocket::close = () ->
-      MockWebSocket::close = () ->
-      done()
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'WebSocket', WebSocket
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
@@ -173,18 +175,21 @@ describe 'A generic client', ->
     node = null
     id = null
 
-    MockPeer::generatePeeringPacket = (callback) ->
-      MockPeer::generatePeeringPacket = (callback) ->
-      node = this
-      this.id = 'testID'
-      id = 'testID'
-      this.onopen()
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        node = this
+        this.id = 'testID'
+        id = 'testID'
+        this.onopen()
 
-    MockList::add = (id, node) ->
-      MockList::add = (id, node) ->
-      id.should.be.equal 'testID'
-      node.should.be.equal node
-      done()
+    class List extends MockList
+      add: (id, node) ->
+        id.should.be.equal 'testID'
+        node.should.be.equal node
+        done()
+
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'List', List
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
@@ -199,10 +204,36 @@ describe 'A generic client', ->
     testClient = new ClientModule.Client
     testClient.densify()
 
-  it 'should select a random peer within the pool', (done) ->
+  it 'should get node list on densification called', (done) ->
     class List extends MockList
       getNodeList: () ->
         done()
+        return [ ]
+
+    ClientModule.__set__ 'List', List
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should select a random peer within its pool on densify', (done) ->
+    originalMath = Math.random
+    originalFloor = Math.floor
+
+    class List extends MockList
+      getNodeList: () ->
+        return [ 'testPeer1', 'testPeer2' ]
+      getNode: (id) ->
+        id.should.be.equal 'testPeer2'
+        global.Math.random = originalMath
+        global.Math.floor = originalFloor
+        done()
+
+    global.Math.random = () ->
+      return 0.6
+
+    global.Math.floor = (number) ->
+      number.should.be.equal 1.2
+      return 1
 
     ClientModule.__set__ 'List', List
 

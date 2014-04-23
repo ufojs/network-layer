@@ -36,8 +36,10 @@ class Client
     ws.onopen = onWebSocketOpened
 
   densify: () ->
+    exitPoints = @pool.getNodeList()
+    exitLabel = exitPoints[Math.floor Math.random() * exitPoints.length]
+    exitNode = @pool.getNode exitLabel
     peer = new Peer
-    exitPoint = @pool.getNodeList()#[Math.floor(Math.random() * @pool.length)]
 
 
 exports.Client = Client
