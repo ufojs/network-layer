@@ -1,0 +1,25 @@
+{
+  "name": "network-layer",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ufojs/network-layer",
+  "authors": [
+    "Pasquale Boemio <boemianrapsodi@gmail.com>",
+    "Antonio Bevilacqua <b3by.in.th3.sky@gmail.com>"
+  ],
+  "description": "The ufo.js network layer",
+  "keywords": [
+    "ufojs",
+    "websocket",
+    "supernode",
+    "chromeapp",
+    "peer-to-peer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "dependencies": {
+    "ufo-mocks": "~0.0.4"
+  }
+}

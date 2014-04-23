@@ -1,10 +1,9 @@
 chai = require 'chai'
 rewire = require 'rewire'
 chai.should()
-mocks = require './ufo.mocks'
-MockPeer = mocks.MockPeer
-MockWebSocket = mocks.MockWebSocket
-MockList = mocks.MockList
+{MockPeer} = require '../lib/ufo-mocks/peer.mock'
+{MockWebSocket} = require '../lib/ufo-mocks/websocket.mock'
+{MockList} = require '../lib/ufo-mocks/list.mock'
 
 ClientModule = null
 

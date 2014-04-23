@@ -4,6 +4,11 @@ module.exports = (grunt) ->
 
     pkg: grunt.file.readJSON('package.json'),
 
+    bower:
+      install:
+        options:
+          copy: false
+
     uglify:
       build:
         src: 'lib/client.bundle.js'
@@ -59,19 +64,18 @@ module.exports = (grunt) ->
   @loadNpmTasks 'grunt-contrib-watch'
   @loadNpmTasks 'grunt-mocha-test'
   @loadNpmTasks 'grunt-karma'
+  @loadNpmTasks 'grunt-bower-task'
 
+  @registerTask 'installDeps', 'bower:install'
   @registerTask 'compile', [
+    'installDeps'
     'browserify'
     'uglify'
   ]
-
   @registerTask 'integration-test', [
     'compile'
     'karma'
   ]
-
   @registerTask 'unit-test', 'mochaTest'
-
   @registerTask 'default', 'compile'
-
-  @registerTask 'develop', 'watch:test'
+  @registerTask 'develop', ['installDeps', 'watch:test']
