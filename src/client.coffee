@@ -30,16 +30,29 @@ class Client
       ws.onmessage = onWebSocketMessage
       peer = new Peer
       peer.onopen = onPeerConnected
-      peer.generatePeeringPacket(onPeeringPacketReady)
+      peer.generatePeeringPacket onPeeringPacketReady
 
     ws = new WebSocket 'ws://' + address + ':' + port
     ws.onopen = onWebSocketOpened
 
   densify: () ->
+
+    self = this
+    peer = null
+
+    onPeeringPacketReady = (packet) ->
+      exitNode.send packet
+
+    onPeerConnected = () ->
+      self.pool.add peer.id, peer
+
     exitPoints = @pool.getNodeList()
     exitLabel = exitPoints[Math.floor Math.random() * exitPoints.length]
     exitNode = @pool.getNode exitLabel
+
     peer = new Peer
+    peer.onopen = onPeerConnected
+    peer.generatePeeringPacket onPeeringPacketReady
 
 
 exports.Client = Client

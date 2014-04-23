@@ -91,7 +91,7 @@ describe 'A generic client', ->
     testClient = new ClientModule.Client
     testClient.bootstrap 'testaddress', 5000
 
-  it 'should set a peer onopen callback', (done) ->
+  it 'should set a peer onopen callback during bootstrap', (done) ->
     class Peer extends MockPeer
       constructor: () ->
         self = this
@@ -99,7 +99,7 @@ describe 'A generic client', ->
           self.should.respondTo 'onopen'
           done()
 
-        setTimeout checkCallback, 1000
+        setTimeout checkCallback, 100
 
       generatePeeringPacket: () ->
 
@@ -136,7 +136,7 @@ describe 'A generic client', ->
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
-  it 'should forward the peering reply to the peer', (done) ->
+  it 'should forward the peering reply to the peer in bootstrap', (done) ->
     class Peer extends MockPeer
       setPeeringReply: (packet) ->
         packet.should.be.equal 'testReplyPacket'
@@ -154,7 +154,7 @@ describe 'A generic client', ->
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
 
-  it 'should close the websocket after the handshake', (done) ->
+  it 'should close the websocket after the bootstrap handshake', (done) ->
     class Peer extends MockPeer
       generatePeeringPacket: (callback) ->
         callback()
@@ -235,6 +235,50 @@ describe 'A generic client', ->
       number.should.be.equal 1.2
       return 1
 
+    ClientModule.__set__ 'List', List
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should set a peer onopen callback during densify', (done) ->
+    class Peer extends MockPeer
+      constructor: () ->
+        self = this
+        checkCallback = ->
+          self.should.respondTo 'onopen'
+          done()
+
+        setTimeout checkCallback, 100
+
+    ClientModule.__set__ 'Peer', Peer
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should get a peering packet from new peer during densify', (done) ->
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        callback.should.be.a 'function'
+        done()
+
+    ClientModule.__set__ 'Peer', Peer
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should send the densify request over the afore selected peer', (done) ->
+    class Peer extends MockPeer
+      generatePeeringPacket: (callback) ->
+        callback 'testPacket'
+      send: (message) ->
+        message.should.be.equal 'testPacket'
+        done()
+
+    class List extends MockList
+      getNode: (label) ->
+        return new Peer
+
+    ClientModule.__set__ 'Peer', Peer
     ClientModule.__set__ 'List', List
 
     testClient = new ClientModule.Client
