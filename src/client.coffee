@@ -35,4 +35,9 @@ class Client
     ws = new WebSocket 'ws://' + address + ':' + port
     ws.onopen = onWebSocketOpened
 
+  densify: () ->
+    peer = new Peer
+    exitPoint = @pool.getNodeList()#[Math.floor(Math.random() * @pool.length)]
+
+
 exports.Client = Client

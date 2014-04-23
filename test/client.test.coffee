@@ -27,8 +27,12 @@ describe 'A generic client', ->
     testClient = new ClientModule.Client
     testClient.should.respondTo 'bootstrap'
 
+  it 'should have a densify function', ->
+    testClient = new ClientModule.Client
+    testClient.should.respondTo 'densify'
+
   it 'should connect to a websocket', (done) ->
-    class WebSocket
+    class WebSocket extends MockWebSocket
       constructor: (address) ->
         address.should.be.equal 'ws://testaddress:5000'
         done()
@@ -41,7 +45,7 @@ describe 'A generic client', ->
     testClient.bootstrap 'testaddress', 5000
 
   it 'should set a ws onmessage callback', (done) ->
-    class WebSocket
+    class WebSocket extends MockWebSocket
       constructor: (address) ->
         self = this
         checkCallback = ->
@@ -62,7 +66,7 @@ describe 'A generic client', ->
 
 
   it 'should set a ws onopen callback', (done) ->
-    class WebSocket
+    class WebSocket extends MockWebSocket
       constructor: (address) ->
         self = this
         checkCallback = ->
@@ -79,7 +83,7 @@ describe 'A generic client', ->
     testClient.bootstrap 'addr', 'port'
 
   it 'should create a new peer during bootstrap', (done) ->
-    class Peer
+    class Peer extends MockPeer
       constructor: () ->
         done()
       generatePeeringPacket: () ->
@@ -92,7 +96,7 @@ describe 'A generic client', ->
     testClient.bootstrap 'testaddress', 5000
 
   it 'should set a peer onopen callback', (done) ->
-    class Peer
+    class Peer extends MockPeer
       constructor: () ->
         self = this
         checkCallback = ->
@@ -184,3 +188,25 @@ describe 'A generic client', ->
 
     testClient = new ClientModule.Client
     testClient.bootstrap 'addr', 'port'
+
+  it 'should generate a new peer on densify function called', (done) ->
+    class Peer extends MockPeer
+      constructor: () ->
+        done()
+
+    #StubClient = rewire '../src/client'
+    #StubClient.__set__ 'Peer', Peer
+    ClientModule.__set__ 'Peer', Peer
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should select a random peer within the pool', (done) ->
+    class List extends MockList
+      getNodeList: () ->
+        done()
+
+    ClientModule.__set__ 'List', List
+
+    testClient = new ClientModule.Client
+    testClient.densify()
