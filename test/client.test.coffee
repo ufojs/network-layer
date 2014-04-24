@@ -5,7 +5,6 @@ chai.should()
 {MockPeer}      = require '../lib/ufo-mocks/peer.mock'
 {MockWebSocket} = require '../lib/ufo-mocks/websocket.mock'
 {MockList}      = require '../lib/ufo-mocks/list.mock'
-{EventEmitter}  = require 'events'
 
 ClientModule = null
 
