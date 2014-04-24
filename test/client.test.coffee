@@ -1,9 +1,11 @@
 chai = require 'chai'
 rewire = require 'rewire'
 chai.should()
-{MockPeer} = require '../lib/ufo-mocks/peer.mock'
+
+{MockPeer}      = require '../lib/ufo-mocks/peer.mock'
 {MockWebSocket} = require '../lib/ufo-mocks/websocket.mock'
-{MockList} = require '../lib/ufo-mocks/list.mock'
+{MockList}      = require '../lib/ufo-mocks/list.mock'
+{EventEmitter}  = require 'events'
 
 ClientModule = null
 
@@ -93,13 +95,10 @@ describe 'A generic client', ->
 
   it 'should set a peer onopen callback during bootstrap', (done) ->
     class Peer extends MockPeer
-      constructor: () ->
-        self = this
-        checkCallback = ->
-          self.should.respondTo 'onopen'
-          done()
-
-        setTimeout checkCallback, 100
+      on: (method, callback) ->
+        method.should.be.equal 'open'
+        callback.should.be.a 'function'
+        done()
 
       generatePeeringPacket: () ->
 
@@ -176,11 +175,17 @@ describe 'A generic client', ->
     id = null
 
     class Peer extends MockPeer
+      on: (method, callback) ->
+        method.should.be.equal 'open'
+        callback.should.be.a 'function'
+        waitForPacket = ->
+          callback()
+        setTimeout waitForPacket, 200
       generatePeeringPacket: (callback) ->
         node = this
         this.id = 'testID'
         id = 'testID'
-        this.onopen()
+        this.on 'open', callback
 
     class List extends MockList
       add: (id, node) ->
@@ -227,6 +232,7 @@ describe 'A generic client', ->
         global.Math.random = originalMath
         global.Math.floor = originalFloor
         done()
+        return new MockPeer
 
     global.Math.random = () ->
       return 0.6
@@ -242,13 +248,10 @@ describe 'A generic client', ->
 
   it 'should set a peer onopen callback during densify', (done) ->
     class Peer extends MockPeer
-      constructor: () ->
-        self = this
-        checkCallback = ->
-          self.should.respondTo 'onopen'
-          done()
-
-        setTimeout checkCallback, 100
+      on: (method, callback) ->
+        method.should.be.equal 'open'
+        callback.should.be.a 'function'
+        done()
 
     ClientModule.__set__ 'Peer', Peer
 
@@ -272,6 +275,45 @@ describe 'A generic client', ->
         callback 'testPacket'
       send: (message) ->
         message.should.be.equal 'testPacket'
+        done()
+
+    class List extends MockList
+      getNode: (label) ->
+        return new Peer
+
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'List', List
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should set the listener for the selected peer during densify', (done) ->
+    class Peer extends MockPeer
+      once: (event, callback) ->
+        event.should.be.equal 'peeringReply'
+        callback.should.be.a 'function'
+        done()
+
+    class List extends MockList
+      getNode: (label) ->
+        return new Peer
+
+    ClientModule.__set__ 'Peer', Peer
+    ClientModule.__set__ 'List', List
+
+    testClient = new ClientModule.Client
+    testClient.densify()
+
+  it 'should forward the reply to the new peer when received', (done) ->
+    class Peer extends MockPeer
+      once: (method, callback) ->
+        callForReply = ->
+          callback 'testReply'
+
+        setTimeout callForReply, 100
+
+      setPeeringReply: (packet) ->
+        packet.should.be.equal 'testReply'
         done()
 
     class List extends MockList

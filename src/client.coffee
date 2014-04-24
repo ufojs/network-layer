@@ -29,7 +29,7 @@ class Client
     onWebSocketOpened = (event) ->
       ws.onmessage = onWebSocketMessage
       peer = new Peer
-      peer.onopen = onPeerConnected
+      peer.on 'open', onPeerConnected
       peer.generatePeeringPacket onPeeringPacketReady
 
     ws = new WebSocket 'ws://' + address + ':' + port
@@ -40,18 +40,23 @@ class Client
     self = this
     peer = null
 
-    onPeeringPacketReady = (packet) ->
-      exitNode.send packet
-
-    onPeerConnected = () ->
-      self.pool.add peer.id, peer
-
     exitPoints = @pool.getNodeList()
     exitLabel = exitPoints[Math.floor Math.random() * exitPoints.length]
     exitNode = @pool.getNode exitLabel
 
+    onPeeringReplyReceived = (replyPacket) ->
+      peer.setPeeringReply replyPacket
+
+    exitNode.once 'peeringReply', onPeeringReplyReceived
+
+    onPeerConnected = () ->
+      self.pool.add peer.id, peer
+
+    onPeeringPacketReady = (packet) ->
+      exitNode.send packet
+
     peer = new Peer
-    peer.onopen = onPeerConnected
+    peer.on 'open', onPeerConnected
     peer.generatePeeringPacket onPeeringPacketReady
 
 
