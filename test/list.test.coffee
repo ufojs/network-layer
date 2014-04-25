@@ -45,7 +45,6 @@ describe 'A peer list', ->
       currentList.remove 'id'
 
     onNodeRemoved = (nodeList) ->
-      console.log nodeList
       nodeList.should.be.an 'array'
       nodeList.length.should.be.equal 0
       done()
