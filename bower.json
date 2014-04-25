@@ -20,6 +20,6 @@
     "node_modules"
   ],
   "dependencies": {
-    "ufo-mocks": "~0.0.16"
+    "ufo-mocks": "~0.0.18"
   }
 }

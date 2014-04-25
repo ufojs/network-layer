@@ -1,5 +1,6 @@
 {EventEmitter} = require 'events'
 {PeeringPacket} = require './peering-packet'
+{PeeringReplyPacket} = require './peeringreply-packet'
 RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection
 
 class Peer extends EventEmitter
@@ -28,9 +29,19 @@ class Peer extends EventEmitter
 
     onOfferFail = (error) ->
 
+    onChannelOpened = () ->
+      self.emit 'open'
+
     this.pc.onicecandidate = onIceCandidate
     this.dc = this.pc.createDataChannel 'ufo-channel', null
+    this.dc.onopen = onChannelOpened
     this.pc.createOffer onOfferReady, onOfferFail
+
+  setPeeringReply: (peeringReply) ->
+    packet = new PeeringReplyPacket peeringReply
+    this.pc.setRemoteDescription packet.getAnswer()
+    
+
     
 
 exports.Peer = Peer

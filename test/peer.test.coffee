@@ -4,6 +4,7 @@ rewire = require 'rewire'
 PeerModule = null
 {MockPeerConnection} = require '../lib/ufo-mocks/rtc-peerconnection.mock'
 {MockPeeringPacket} = require '../lib/ufo-mocks/peering-packet.mock'
+{MockPeeringReplyPacket} = require '../lib/ufo-mocks/peeringreply-packet.mock'
 
 global.window = {}
 
@@ -13,6 +14,7 @@ describe 'A peer', ->
     PeerModule = rewire '../src/peer'
     PeerModule.__set__ 'RTCPeerConnection', MockPeerConnection
     PeerModule.__set__ 'PeeringPacket', MockPeeringPacket
+    PeerModule.__set__ 'PeeringReplyPacket', MockPeeringReplyPacket
     done()
 
   it 'should keep a peerconnection instance', (done) ->
@@ -102,8 +104,43 @@ describe 'A peer', ->
         label.should.be.equal 'ufo-channel'
         should.not.exist opts
         done()
+        return this.channel
 
     PeerModule.__set__ 'RTCPeerConnection', CustomPeerConnection
 
     thisPeer = new PeerModule.Peer
     thisPeer.generatePeeringPacket () ->
+
+  it 'should emit onopen callback when datachannel connects', (done) ->
+    class CustomPeerConnection extends MockPeerConnection
+      createOffer: (callback1, callback2) ->
+        this.channel.should.respondTo 'onopen'
+        this.channel.onopen()
+
+    onOpenCallback = () ->
+      done()
+
+    PeerModule.__set__ 'RTCPeerConnection', CustomPeerConnection
+    thisPeer = new PeerModule.Peer
+    thisPeer.once 'open', onOpenCallback
+    thisPeer.generatePeeringPacket () ->
+
+  it 'should parse peering reply packet', (done) ->
+    class CustomPeeringReplyPacket extends MockPeeringReplyPacket
+      constructor: (packet) ->
+        packet.should.be.equal 'received packet'
+        done()
+
+    PeerModule.__set__ 'PeeringReplyPacket', CustomPeeringReplyPacket
+    thisPeer = new PeerModule.Peer
+    thisPeer.setPeeringReply 'received packet'
+
+  it 'should set peerconnection remote description', (done) ->
+    class CustomPeerConnection extends MockPeerConnection
+      setRemoteDescription: (descriptor) ->
+        descriptor.should.be.equal 'the answer'
+        done()
+    
+    PeerModule.__set__ 'RTCPeerConnection', CustomPeerConnection
+    thisPeer = new PeerModule.Peer
+    thisPeer.setPeeringReply 'packet'
